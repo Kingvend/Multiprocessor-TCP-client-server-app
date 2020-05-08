@@ -70,26 +70,29 @@ int Func2 (int newS){
 		{
 			case '1':
             // add
-			recv(newS, buf, sizeof(buf), 0);
-			strcpy(StudentBuf.Name, buf);
-			recv(newS, buf, sizeof(buf), 0);
-			strcpy(StudentBuf.GroupNumber, buf);
-			recv(newS, buf, sizeof(buf), 0);
-			strcpy(StudentBuf.BirthDay, buf);
-			recv(newS, buf, sizeof(buf), 0);
-			strcpy(StudentBuf.tel, buf);
-			recv(newS, buf, sizeof(buf), 0);
-			strcpy(StudentBuf.FirstYear, buf);
-			StudentList.push_back(StudentBuf);
-			StudentBuf = ClearStudentBuf(StudentBuf);
-			strcpy(buf, "New student has been added");
-			printf("%s\n", buf);
-			send(newS, buf, sizeof(buf), 0);
-			
-            break;
+			{
+				recv(newS, buf, sizeof(buf), 0);
+				strcpy(StudentBuf.Name, buf);
+				recv(newS, buf, sizeof(buf), 0);
+				strcpy(StudentBuf.GroupNumber, buf);
+				recv(newS, buf, sizeof(buf), 0);
+				strcpy(StudentBuf.BirthDay, buf);
+				recv(newS, buf, sizeof(buf), 0);
+				strcpy(StudentBuf.tel, buf);
+				recv(newS, buf, sizeof(buf), 0);
+				strcpy(StudentBuf.FirstYear, buf);
+				StudentList.push_back(StudentBuf);
+				StudentBuf = ClearStudentBuf(StudentBuf);
+				strcpy(buf, "New student has been added");
+				printf("%s\n", buf);
+				send(newS, buf, sizeof(buf), 0);
+			}			
+			break;
+
 			case '2':
 			// del	
-			st = std::to_string(StudentList.size());	
+			{
+				st = std::to_string(StudentList.size());	
 				pchar = st.c_str();
 				strcpy(buf, pchar);
 				send(newS, buf, sizeof(buf), 0);
@@ -120,11 +123,14 @@ int Func2 (int newS){
 					strcpy(buf, "Student hasn't been deleted");
 					printf("%s\n", buf);
 					send(newS, buf, sizeof(buf), 0);
-				}								
+				}	
+			}							
 			break;
+
 			case '3':
 			// edit
-			st = std::to_string(StudentList.size());	
+			{
+				st = std::to_string(StudentList.size());	
 				pchar = st.c_str();
 				strcpy(buf, pchar);
 				send(newS, buf, sizeof(buf), 0);
@@ -225,12 +231,14 @@ int Func2 (int newS){
 					strcpy(buf, pchar);
 					printf("%s\n", buf);
 					send(newS, buf, sizeof(buf), 0);
-				}	
+				}
+			}	
 			break;
-			case '4':
 
-				//view all
-				st = std::to_string(StudentList.size());	
+			case '4':
+			//view all
+			{
+					st = std::to_string(StudentList.size());	
 				pchar = st.c_str();
 				strcpy(buf, pchar);
 				send(newS, buf, sizeof(buf), 0);
@@ -247,13 +255,23 @@ int Func2 (int newS){
 					strcpy(buf, StudentList[i].FirstYear);
 					send(newS, buf, sizeof(buf), 0);
 				}
-				break;
+				}
+			break;
+
 			case '5':
 			// view filter
+			{
+
+			}
 			break;
+
 			case '6':
 			// view sort
+			{
+				
+			}
 			break;
+
 			case '7':
 			// exit
 			 exit(0);			
