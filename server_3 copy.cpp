@@ -261,14 +261,14 @@ int Func2 (int newS){
 			case '5':
 			// view filter
 			{
-
+				
 			}
 			break;
 
 			case '6':
 			// view sort
 			{
-				
+
 			}
 			break;
 
@@ -297,6 +297,7 @@ Student ClearStudentBuf(Student StudentBuf)
 
 int main()
 {
+	#pragma region InitStartListStudent
 	Student StudentBuf;
 	strcpy(StudentBuf.Name, "SIDOROV ANDREY PETROVICH");
 	strcpy(StudentBuf.GroupNumber, "12");
@@ -337,6 +338,7 @@ int main()
 	strcpy(StudentBuf.FirstYear, "2015");
 	StudentList.push_back(StudentBuf);
 	StudentBuf = ClearStudentBuf(StudentBuf);
+	#pragma endregion
 
 	struct sockaddr_in local;
 		int s, newS, rc;
