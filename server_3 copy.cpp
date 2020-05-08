@@ -320,7 +320,6 @@ int main()
 	StudentList.push_back(StudentBuf);
 	StudentBuf = ClearStudentBuf(StudentBuf);
 
-	
 	struct sockaddr_in local;
 		int s, newS, rc;
 		
