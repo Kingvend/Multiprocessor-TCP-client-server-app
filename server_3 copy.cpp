@@ -34,6 +34,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 #define NAME_LENGTH 35
 #define GROUP_NUMBER_LENGTH 20
@@ -50,9 +51,58 @@ struct Student
 	char FirstYear[FIRST_YEAR_LENGTH];
 };
 
+struct StudentString
+{
+	std::string Name;
+	std::string GroupNumber;
+	std::string BirthDay;
+	std::string tel;
+	std::string FirstYear;
+};
+
 std::vector<Student> StudentList;
+std::vector<StudentString> StudentStringList;
 
+void CharToString()
+{
+	StudentStringList.clear();
+	for(int i = 0; i < StudentList.size();i++)
+	{
+		StudentString SST;
+		
+		SST.Name = (const char*) StudentList[i].Name;
+		SST.GroupNumber = (const char*) StudentList[i].GroupNumber;
+		SST.BirthDay = (const char*) StudentList[i].BirthDay;
+		SST.tel = (const char*) StudentList[i].tel;
+		SST.FirstYear = (const char*) StudentList[i].FirstYear;
+		StudentStringList.push_back(SST);
+	}
+}
 
+bool sortName(StudentString k, StudentString j)
+{
+	return k.Name < j.Name;
+}
+
+bool sortGroup(StudentString k, StudentString j)
+{
+	return k.GroupNumber < j.GroupNumber;
+}
+
+bool sortBirth(StudentString k, StudentString j)
+{
+	return k.BirthDay < j.BirthDay;
+}
+
+bool sortTel(StudentString k, StudentString j)
+{
+	return k.tel < j.tel;
+}
+
+bool sortYear(StudentString k, StudentString j)
+{
+	return k.FirstYear < j.FirstYear;
+}
 int numSud = 5; // default number student
 
 void clearBuf(char* buf)
@@ -254,10 +304,10 @@ int Func2 (int newS){
 			//view all
 			{
 				st = std::to_string(StudentList.size());	
-				std::cout << "st: "<< st << std::endl;
-				printf("%s%lu\n", "real size: ", StudentList.size());
+				//std::cout << "st: "<< st << std::endl;
+				//printf("%s%lu\n", "real size: ", StudentList.size());
 				pchar = st.c_str();
-				printf("%s%s\n", "pchar: ", pchar);
+				//printf("%s%s\n", "pchar: ", pchar);
 				strcpy(buf, pchar);
 				send(newS, buf, sizeof(buf), 0);
 				for (i = 0; i < StudentList.size(); i++)
@@ -565,7 +615,78 @@ int Func2 (int newS){
 			case '6':
 			// view sort
 			{
-
+				CharToString();
+				recv(newS, buf, sizeof(buf), 0);
+					NumParam = atoi(buf);
+					if(NumParam < 1 || NumParam > 5)
+					{
+						//stop
+						st = std::to_string(1);	
+						pchar = st.c_str();
+						strcpy(buf, pchar);
+						//printf("%s\n", buf);
+						send(newS, buf, sizeof(buf), 0);
+					}
+					else
+					{
+						// ok
+						st = std::to_string(0);	
+						pchar = st.c_str();
+						strcpy(buf, pchar);
+						//printf("%s\n", buf);
+						send(newS, buf, sizeof(buf), 0);
+						switch (NumParam)
+						{
+						case 1:
+						{
+							std::sort(StudentStringList.begin(),StudentStringList.end(), sortName);
+							
+						}
+						break;	
+						case 2:
+						{
+							std::sort(StudentStringList.begin(),StudentStringList.end(), sortGroup);
+						}
+						break;	
+						case 3:
+						{
+							std::sort(StudentStringList.begin(),StudentStringList.end(), sortBirth);
+						}
+						break;	
+						case 4:
+						{
+							std::sort(StudentStringList.begin(),StudentStringList.end(), sortTel);
+						}
+						break;	
+						case 5:
+						{
+							std::sort(StudentStringList.begin(),StudentStringList.end(), sortYear);
+						}
+						break;						
+						}
+						st = std::to_string(StudentList.size());	
+							pchar = st.c_str();
+							strcpy(buf, pchar);
+							send(newS, buf, sizeof(buf), 0);
+							for (i = 0; i < StudentStringList.size(); i++)
+							{
+								pchar = StudentStringList[i].Name.c_str();
+								strcpy(buf, pchar);
+								send(newS, buf, sizeof(buf), 0);
+								pchar = StudentStringList[i].GroupNumber.c_str();
+								strcpy(buf, pchar);
+								send(newS, buf, sizeof(buf), 0);
+								pchar = StudentStringList[i].BirthDay.c_str();
+								strcpy(buf, pchar);
+								send(newS, buf, sizeof(buf), 0);
+								pchar = StudentStringList[i].tel.c_str();
+								strcpy(buf, pchar);
+								send(newS, buf, sizeof(buf), 0);
+								pchar = StudentStringList[i].FirstYear.c_str();
+								strcpy(buf, pchar);
+								send(newS, buf, sizeof(buf), 0);
+							}
+					}
 			}
 			break;
 
