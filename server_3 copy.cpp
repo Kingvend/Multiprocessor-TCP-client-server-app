@@ -40,14 +40,6 @@
 #define TEL_LENGTH 20
 #define FIRST_YEAR_LENGTH 20
 
-struct Employee
-{
-	char name[35];
-	char number[10];
-	char income[10];
-	char tax[4];
-} em [7];
-
 struct Student
 {
 	char Name[NAME_LENGTH];
@@ -58,7 +50,6 @@ struct Student
 };
 
 std::vector<Student> StudentList;
-
 
 int numSud = 5; // default number student
 
@@ -270,85 +261,6 @@ int Func2 (int newS){
 	}
 }
 
-int Func (int newS){
-	int i, num, t, mon, doh, nal;
-	float sum;
-	int m;
-	char p, p1, s;
-	std::string ss;
-	char buf[256], b[256];
-		while(true) {
-		recv(newS, buf, sizeof(buf), 0);
-		p = buf[0];
-		switch(p){
-			// case '1':
-            // buf[0] = '\0';
-            // sum = 0;
-            // recv(newS, buf, sizeof(buf), 0);
-            // mon = atoi(buf);
-            // recv(newS, buf, sizeof(buf), 0);
-
-            // s = buf[0];
-            // for (i = 1; i <= 5; i++)
-            //     if (em[i].name[0] == s) {
-            //         nal = atoi(em[i].tax);
-            //         doh = atoi(em[i].income);
-            //         printf("mon %d\n", mon);
-            //         sum = sum + (nal*doh*mon) / 100.0;
-            //     }
-            // int *decpt, *sgn;
-            // printf("%f\n", sum);
-
-            // //strcpy(buf, fcvt(sum, 3, decpt, sgn));
-			//  ss = std::to_string(sum);
-			// for(i = 0; i < ss.size();i++)
-			// {
-			// 	buf[i]= ss[i];
-			// }
-			// buf[ss.size()] = '\0';
-			// printf("%s",buf);
-            // send(newS, buf, sizeof(buf), 0);
-            // puts(buf);
-            // break;
-			case '2':
-				recv(newS, buf, sizeof(buf), 0); 
-				num = atoi(buf);
-				printf("%d\n", num);
-				recv(newS, buf, sizeof(buf), 0);
-				p1 = buf[0];
-				switch(p1) {
-					case '1':
-						recv(newS, buf, sizeof(buf), 0);
-						strcpy(em[num].name, buf);
-						break;
-					case '2':
-						recv(newS, buf, sizeof(buf), 0);
-						strcpy(em[num].number, buf);
-						break;
-					case '3':
-						recv(newS, buf, sizeof(buf), 0);
-						strcpy(em[num].income, buf);
-						break;
-					case '4':
-						recv(newS, buf, sizeof(buf), 0);
-						strcpy(em[num].tax, buf);
-				}
-				break;
-			case '3':
-				for (i = 1; i <= 5; i++){
-					buf[0] = '\0';
-					strcat(buf, em[i].name); strcat(buf, " ");
-					strcat(buf, em[i].number); strcat(buf, " ");
-					strcat(buf, em[i].income); strcat(buf, " ");
-					strcat(buf, em[i].tax); strcat(buf, " ");
-				send(newS, buf, sizeof(buf),0);				
-				}
-				break;
-				case '4': exit(0);			
-		}
-	}
-}
-
 void reaper(int sig)
 {
 	int status;
@@ -432,4 +344,3 @@ int main()
 		}
 	return 0;
 }
-
