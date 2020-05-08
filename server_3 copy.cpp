@@ -46,7 +46,7 @@ struct Employee
 	char number[10];
 	char income[10];
 	char tax[4];
-} em [6];
+} em [7];
 
 struct Student
 {
