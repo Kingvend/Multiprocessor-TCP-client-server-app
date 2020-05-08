@@ -33,6 +33,7 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
+#include <iostream>
 
 #define NAME_LENGTH 35
 #define GROUP_NUMBER_LENGTH 20
@@ -51,20 +52,34 @@ struct Student
 
 std::vector<Student> StudentList;
 
+
 int numSud = 5; // default number student
+
+void clearBuf(char* buf)
+{
+	for(int i = 0; i < 256;i++)
+		buf[i] = '\0';
+}
 
 Student ClearStudentBuf(Student StudentBuf);
 
 int Func2 (int newS){
 	char p, p1, s;
-	int i, PointToList;
+	
+	int i, PointToList, j;
 	int NumParam;
 	char buf[256], b[256];
 	char const *pchar;
+	bool Check;
 	std::string st;
 	Student StudentBuf;
 	while(true) {
+		clearBuf(buf);
+		clearBuf(b);
+		fflush(stdin); fflush(stdout);
+		std::vector<Student> StudentListFilter;
 		recv(newS, buf, sizeof(buf), 0);
+		printf("%s\n", buf);
 		p = buf[0];
 		switch(p)
 		{
@@ -238,8 +253,11 @@ int Func2 (int newS){
 			case '4':
 			//view all
 			{
-					st = std::to_string(StudentList.size());	
+				st = std::to_string(StudentList.size());	
+				std::cout << "st: "<< st << std::endl;
+				printf("%s%lu\n", "real size: ", StudentList.size());
 				pchar = st.c_str();
+				printf("%s%s\n", "pchar: ", pchar);
 				strcpy(buf, pchar);
 				send(newS, buf, sizeof(buf), 0);
 				for (i = 0; i < StudentList.size(); i++)
@@ -261,7 +279,286 @@ int Func2 (int newS){
 			case '5':
 			// view filter
 			{
-				
+				recv(newS, buf, sizeof(buf), 0);
+					NumParam = atoi(buf);
+					if(NumParam < 1 || NumParam > 5)
+					{
+						//stop
+						st = std::to_string(1);	
+						pchar = st.c_str();
+						strcpy(buf, pchar);
+						//printf("%s\n", buf);
+						send(newS, buf, sizeof(buf), 0);
+					}
+					else
+					{
+						// ok
+						st = std::to_string(0);	
+						pchar = st.c_str();
+						strcpy(buf, pchar);
+						//printf("%s\n", buf);
+						send(newS, buf, sizeof(buf), 0);
+						switch(NumParam)
+						{
+							case 1:
+								// Name
+								recv(newS, buf, sizeof(buf), 0);
+								//printf("%s\n", "TEST");
+								//printf("%s%s\n","buf: ", buf);
+								for(i = 0; i < StudentList.size(); i++)
+								{
+									Check = true;
+									j = 0;
+									strcpy(StudentBuf.Name,buf);
+									while(StudentBuf.Name[j] != '\0')
+									{
+										if(StudentBuf.Name[j] != StudentList[i].Name[j])
+										{
+											Check = false;
+										}
+										j++;
+									}
+									//printf("%s%s\n","StudentBufName: ", StudentBuf.Name);
+									//printf("%s%s\n","StudentListName: ", StudentList[i].Name);
+									if(Check)
+									{
+										//printf("%s\n", "found!");
+										StudentListFilter.push_back(StudentList[i]);
+									}
+								}
+								st = std::to_string(StudentListFilter.size());	
+								pchar = st.c_str();
+								strcpy(buf, pchar);
+								//printf("%s%s\n", buf, " number");
+								send(newS, buf, sizeof(buf), 0);
+								for (i = 0; i < StudentListFilter.size(); i++)
+								{
+									strcpy(buf, StudentListFilter[i].Name);
+									send(newS, buf, sizeof(buf), 0);
+									strcpy(buf, StudentListFilter[i].GroupNumber);
+									send(newS, buf, sizeof(buf), 0);
+									strcpy(buf, StudentListFilter[i].BirthDay);
+									send(newS, buf, sizeof(buf), 0);
+									strcpy(buf, StudentListFilter[i].tel);
+									send(newS, buf, sizeof(buf), 0);
+									strcpy(buf, StudentListFilter[i].FirstYear);
+									send(newS, buf, sizeof(buf), 0);
+								}
+								StudentBuf = ClearStudentBuf(StudentBuf);
+
+								strcpy(buf, "FILTERING ENDED");
+								printf("%s\n", buf);
+								send(newS, buf, sizeof(buf), 0);
+								break;
+							case 2:
+								// Group
+								recv(newS, buf, sizeof(buf), 0);
+								//printf("%s\n", "TEST");
+								//printf("%s%s\n","buf: ", buf);
+								for(i = 0; i < StudentList.size(); i++)
+								{
+									Check = true;
+									j = 0;
+									strcpy(StudentBuf.GroupNumber,buf);
+									while(StudentBuf.GroupNumber[j] != '\0')
+									{
+										if(StudentBuf.GroupNumber[j] != StudentList[i].GroupNumber[j])
+										{
+											Check = false;
+										}
+										j++;
+									}
+									//printf("%s%s\n","StudentBufName: ", StudentBuf.Name);
+									//printf("%s%s\n","StudentListName: ", StudentList[i].Name);
+									if(Check)
+									{
+										//printf("%s\n", "found!");
+										StudentListFilter.push_back(StudentList[i]);
+									}
+								}
+								st = std::to_string(StudentListFilter.size());	
+								pchar = st.c_str();
+								strcpy(buf, pchar);
+								//printf("%s%s\n", buf, " number");
+								send(newS, buf, sizeof(buf), 0);
+								for (i = 0; i < StudentListFilter.size(); i++)
+								{
+									strcpy(buf, StudentListFilter[i].Name);
+									send(newS, buf, sizeof(buf), 0);
+									strcpy(buf, StudentListFilter[i].GroupNumber);
+									send(newS, buf, sizeof(buf), 0);
+									strcpy(buf, StudentListFilter[i].BirthDay);
+									send(newS, buf, sizeof(buf), 0);
+									strcpy(buf, StudentListFilter[i].tel);
+									send(newS, buf, sizeof(buf), 0);
+									strcpy(buf, StudentListFilter[i].FirstYear);
+									send(newS, buf, sizeof(buf), 0);
+								}
+								StudentBuf = ClearStudentBuf(StudentBuf);
+
+								strcpy(buf, "FILTERING ENDED");
+								printf("%s\n", buf);
+								send(newS, buf, sizeof(buf), 0);
+								break;
+								break;
+
+							case 3:
+								// Birthday
+								recv(newS, buf, sizeof(buf), 0);
+								//printf("%s\n", "TEST");
+								//printf("%s%s\n","buf: ", buf);
+								for(i = 0; i < StudentList.size(); i++)
+								{
+									Check = true;
+									j = 0;
+									strcpy(StudentBuf.BirthDay,buf);
+									while(StudentBuf.BirthDay[j] != '\0')
+									{
+										if(StudentBuf.BirthDay[j] != StudentList[i].BirthDay[j])
+										{
+											Check = false;
+										}
+										j++;
+									}
+									//printf("%s%s\n","StudentBufName: ", StudentBuf.Name);
+									//printf("%s%s\n","StudentListName: ", StudentList[i].Name);
+									if(Check)
+									{
+										//printf("%s\n", "found!");
+										StudentListFilter.push_back(StudentList[i]);
+									}
+								}
+								st = std::to_string(StudentListFilter.size());	
+								pchar = st.c_str();
+								strcpy(buf, pchar);
+								//printf("%s%s\n", buf, " number");
+								send(newS, buf, sizeof(buf), 0);
+								for (i = 0; i < StudentListFilter.size(); i++)
+								{
+									strcpy(buf, StudentListFilter[i].Name);
+									send(newS, buf, sizeof(buf), 0);
+									strcpy(buf, StudentListFilter[i].GroupNumber);
+									send(newS, buf, sizeof(buf), 0);
+									strcpy(buf, StudentListFilter[i].BirthDay);
+									send(newS, buf, sizeof(buf), 0);
+									strcpy(buf, StudentListFilter[i].tel);
+									send(newS, buf, sizeof(buf), 0);
+									strcpy(buf, StudentListFilter[i].FirstYear);
+									send(newS, buf, sizeof(buf), 0);
+								}
+								StudentBuf = ClearStudentBuf(StudentBuf);
+
+								strcpy(buf, "FILTERING ENDED");
+								printf("%s\n", buf);
+								send(newS, buf, sizeof(buf), 0);
+								break;
+								break;
+
+							case 4:
+								// tel
+								recv(newS, buf, sizeof(buf), 0);
+								//printf("%s\n", "TEST");
+								//printf("%s%s\n","buf: ", buf);
+								for(i = 0; i < StudentList.size(); i++)
+								{
+									Check = true;
+									j = 0;
+									strcpy(StudentBuf.tel,buf);
+									while(StudentBuf.tel[j] != '\0')
+									{
+										if(StudentBuf.tel[j] != StudentList[i].tel[j])
+										{
+											Check = false;
+										}
+										j++;
+									}
+									//printf("%s%s\n","StudentBufName: ", StudentBuf.Name);
+									//printf("%s%s\n","StudentListName: ", StudentList[i].Name);
+									if(Check)
+									{
+										//printf("%s\n", "found!");
+										StudentListFilter.push_back(StudentList[i]);
+									}
+								}
+								st = std::to_string(StudentListFilter.size());	
+								pchar = st.c_str();
+								strcpy(buf, pchar);
+								//printf("%s%s\n", buf, " number");
+								send(newS, buf, sizeof(buf), 0);
+								for (i = 0; i < StudentListFilter.size(); i++)
+								{
+									strcpy(buf, StudentListFilter[i].Name);
+									send(newS, buf, sizeof(buf), 0);
+									strcpy(buf, StudentListFilter[i].GroupNumber);
+									send(newS, buf, sizeof(buf), 0);
+									strcpy(buf, StudentListFilter[i].BirthDay);
+									send(newS, buf, sizeof(buf), 0);
+									strcpy(buf, StudentListFilter[i].tel);
+									send(newS, buf, sizeof(buf), 0);
+									strcpy(buf, StudentListFilter[i].FirstYear);
+									send(newS, buf, sizeof(buf), 0);
+								}
+								StudentBuf = ClearStudentBuf(StudentBuf);
+
+								strcpy(buf, "FILTERING ENDED");
+								printf("%s\n", buf);
+								send(newS, buf, sizeof(buf), 0);
+								break;
+								break;
+								
+							case 5:
+								// FirstYear
+								recv(newS, buf, sizeof(buf), 0);
+								//printf("%s\n", "TEST");
+								//printf("%s%s\n","buf: ", buf);
+								for(i = 0; i < StudentList.size(); i++)
+								{
+									Check = true;
+									j = 0;
+									strcpy(StudentBuf.FirstYear,buf);
+									while(StudentBuf.FirstYear[j] != '\0')
+									{
+										if(StudentBuf.FirstYear[j] != StudentList[i].FirstYear[j])
+										{
+											Check = false;
+										}
+										j++;
+									}
+									//printf("%s%s\n","StudentBufName: ", StudentBuf.Name);
+									//printf("%s%s\n","StudentListName: ", StudentList[i].Name);
+									if(Check)
+									{
+										//printf("%s\n", "found!");
+										StudentListFilter.push_back(StudentList[i]);
+									}
+								}
+								st = std::to_string(StudentListFilter.size());	
+								pchar = st.c_str();
+								strcpy(buf, pchar);
+								//printf("%s%s\n", buf, " number");
+								send(newS, buf, sizeof(buf), 0);
+								for (i = 0; i < StudentListFilter.size(); i++)
+								{
+									strcpy(buf, StudentListFilter[i].Name);
+									send(newS, buf, sizeof(buf), 0);
+									strcpy(buf, StudentListFilter[i].GroupNumber);
+									send(newS, buf, sizeof(buf), 0);
+									strcpy(buf, StudentListFilter[i].BirthDay);
+									send(newS, buf, sizeof(buf), 0);
+									strcpy(buf, StudentListFilter[i].tel);
+									send(newS, buf, sizeof(buf), 0);
+									strcpy(buf, StudentListFilter[i].FirstYear);
+									send(newS, buf, sizeof(buf), 0);
+								}
+								StudentBuf = ClearStudentBuf(StudentBuf);
+
+								strcpy(buf, "FILTERING ENDED");
+								printf("%s\n", buf);
+								send(newS, buf, sizeof(buf), 0);
+								break;
+								break;							
+						}
+					}
 			}
 			break;
 
